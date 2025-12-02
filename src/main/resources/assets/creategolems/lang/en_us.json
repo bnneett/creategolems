@@ -1,0 +1,15 @@
+{
+  "itemGroup.creategolems": "Create: Golems",
+  "item.creategolems.base_golem_spawn_egg": "Base Golem Spawn Egg",
+  "entities.creategolems.base_golem": "Base Golem",
+  
+
+  "creategolems.configuration.title": "Create: Golems Configs",
+  "creategolems.configuration.section.creategolems.common.toml": "Create: Golems Configs",
+  "creategolems.configuration.section.creategolems.common.toml.title": "Create: Golems Configs",
+
+  "creategolems.configuration.items": "Item List",
+  "creategolems.configuration.logDirtBlock": "Log Dirt Block",
+  "creategolems.configuration.magicNumberIntroduction": "Magic Number Text",
+  "creategolems.configuration.magicNumber": "Magic Number"
+}
