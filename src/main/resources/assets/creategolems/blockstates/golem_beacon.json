@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "powered=false": { "model": "creategolems:block/golem_beacon" },
+    "powered=true":  { "model": "creategolems:block/golem_beacon_powered" }
+  }
+}

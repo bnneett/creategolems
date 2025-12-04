@@ -1,11 +1,14 @@
 package com.bnneett.creategolems.entity;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.bnneett.creategolems.ai.BaseGolemAi;
+import com.bnneett.creategolems.event.GolemBeaconListener;
 import com.mojang.serialization.Dynamic;
 
 import io.netty.buffer.ByteBuf;
@@ -35,8 +38,9 @@ import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.DynamicGameEventListener;
+import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.game.DebugPackets;
@@ -47,7 +51,6 @@ public class BaseGolem extends PathfinderMob implements InventoryCarrier {
     private UUID ownerId;
     @Nullable 
     private BlockPos homePos;
-    private boolean triedInitHome = false;
     private long inStateTicks = 0L;
 
     public final AnimationState powerDownAnimationState = new AnimationState();
@@ -56,26 +59,27 @@ public class BaseGolem extends PathfinderMob implements InventoryCarrier {
 
     private final SimpleContainer inventory = new SimpleContainer(1); // size (slots) of container currently 1
     
+    private final DynamicGameEventListener<GolemBeaconListener> homeListener;
+    
     private static final EntityDataAccessor<Integer> BASE_GOLEM_STATE_ID =
         SynchedEntityData.defineId(BaseGolem.class, EntityDataSerializers.INT); // we literally can't make our own entitydataserializer so this is the only move
 
     private static final EntityDataAccessor<Integer> FUEL_TICKS =
         SynchedEntityData.defineId(BaseGolem.class, EntityDataSerializers.INT); // create synched int field for current fuel level
 
-    /* TODO list
-    - golem beacon object (another file lol)
-    - golem "detect home" radius (around self) smaller than golem operation radius (around home)
-    - determine golem operation radius LOL
-    - base golem should remain within operation radius / path back if outside
-    - base golem should also do its best to get to its beacon object before it powers down (to prevent getting lost lol)
-    
-    */
-
     // constructor
 
     public BaseGolem(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
         this.getNavigation().setCanFloat(true);
+
+        if (!level.isClientSide) {
+            this.homeListener = new DynamicGameEventListener<>(
+                new GolemBeaconListener(this,16)
+            );
+        } else this.homeListener = null;
+        
+
     }
  
     // attribute shit
@@ -123,16 +127,20 @@ public class BaseGolem extends PathfinderMob implements InventoryCarrier {
     public void setOwnerId(@Nullable UUID uuid) {
         this.ownerId = uuid;
     }
-    
-    public BlockPos getHomePos() {
-        return this.homePos;
-    }
-
-    public void setHomePos( @Nullable BlockPos pos) {
-        this.homePos = pos;
-    }
 
     // data syncing
+
+    public Iterable<DynamicGameEventListener<?>> getDynamicGameEventListeners() {
+        return List.of(homeListener);
+    }
+
+    public void updateDynamicGameEventListener(BiConsumer<DynamicGameEventListener<?>, ServerLevel> consumer) {
+        Level level = this.level();
+        if (level instanceof ServerLevel) {
+            ServerLevel serverLevel = (ServerLevel)level;
+            consumer.accept(this.homeListener, serverLevel);
+        }
+    }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) { // i guess we gotta sync our internal data with the whatever whatever
@@ -313,16 +321,6 @@ public class BaseGolem extends PathfinderMob implements InventoryCarrier {
         super.tick();
         if (this.level().isClientSide()) {
             this.setupAnimationStates();
-        }
-        if (!this.triedInitHome) {
-            this.triedInitHome = true;
-
-            if (this.homePos == null) {
-                BlockPos below = this.blockPosition().below();
-                if (this.level().getBlockState(below).is(Blocks.JACK_O_LANTERN)) {
-                    this.setHomePos(below.immutable());
-                }
-            }
         }
 
         ++this.inStateTicks;

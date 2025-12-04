@@ -22,6 +22,7 @@ public class GolemCreativeTab {
                 .displayItems((params, output) -> {
                     // put things in the tab :3
                     output.accept(GolemItems.BASE_GOLEM_SPAWN_EGG.get());
+                    output.accept(GolemBlocks.GOLEM_BEACON.get().asItem());
                 })
                 .build()
         );

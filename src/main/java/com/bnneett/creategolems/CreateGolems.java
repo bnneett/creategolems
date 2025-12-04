@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import com.bnneett.creategolems.entity.BaseGolem;
 import com.bnneett.creategolems.registry.GolemAttributes;
+import com.bnneett.creategolems.registry.GolemBlocks;
 import com.bnneett.creategolems.registry.GolemCreativeTab;
 import com.bnneett.creategolems.registry.GolemEntities;
 import com.bnneett.creategolems.registry.GolemItems;
@@ -53,6 +54,7 @@ public class CreateGolems {
         GolemAttributes.ATTRIBUTES.register(modEventBus);
         GolemEntities.ENTITIES.register(modEventBus);
         GolemItems.ITEMS.register(modEventBus);
+        GolemBlocks.BLOCKS.register(modEventBus);
         GolemCreativeTab.CREATIVE_MODE_TABS.register(modEventBus);
 
 

@@ -2,9 +2,12 @@ package com.bnneett.creategolems;
 
 import com.bnneett.creategolems.client.renderer.entity.BaseGolemRenderer;
 import com.bnneett.creategolems.model.BaseGolemModel;
+import com.bnneett.creategolems.registry.GolemBlocks;
 import com.bnneett.creategolems.registry.GolemEntities;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -30,8 +33,7 @@ public class CreateGolemsClient {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         // Some client setup code
-        CreateGolems.LOGGER.info("HELLO FROM CLIENT SETUP");
-        CreateGolems.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        CreateGolems.LOGGER.info("whats up mother fucker");
     }
 
     @SubscribeEvent

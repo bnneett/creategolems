@@ -3,6 +3,7 @@ package com.bnneett.creategolems.registry;
 import com.bnneett.creategolems.CreateGolems;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
@@ -22,6 +23,12 @@ public class GolemItems {
                 0x222222,
                 new Item.Properties()
             )
+        );
+
+    public static final DeferredHolder<Item, BlockItem> GOLEM_BEACON_ITEM =
+        ITEMS.register("golem_beacon",
+                () -> new BlockItem(GolemBlocks.GOLEM_BEACON.get(),
+                        new Item.Properties())
         );
         
     

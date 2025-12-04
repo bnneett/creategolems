@@ -1,6 +1,7 @@
 {
   "itemGroup.creategolems": "Create: Golems",
   "item.creategolems.base_golem_spawn_egg": "Base Golem Spawn Egg",
+  "block.creategolems.golem_beacon": "Golem Beacon",
   "entities.creategolems.base_golem": "Base Golem",
   
 
